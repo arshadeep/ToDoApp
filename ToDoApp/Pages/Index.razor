@@ -1,0 +1,63 @@
+﻿@page "/"
+@using Model
+<div class="todo-container">
+
+<h1>To Do App</h1>
+<div class=todo-input>
+	<input type="text" @bind="toDoInput"/>
+	<button @onclick="AddToDo">Add</button>
+</div>
+@for(int i=0;i<addedItems.Count;i++)
+	{
+		var index = i;
+		var toDo = addedItems[i];
+		<div class="todo-item">
+		<div
+		class="@(toDo.IsComplete? "todo-item__text complete":"todo-item__text")"
+		@onclick="@(()=>MarkAsComplete(toDo))">@toDo.Title
+        </div>
+		<div class=todo-item__close @onclick="@(() => RemoveToDo(index))">&times;</div>
+		</div>
+	}
+	
+</div>
+
+@code
+{
+	public string toDoInput { get; set; }
+	public bool isComplete{ get; set; }
+	
+
+	List<ToDo> addedItems = new List<ToDo>();
+
+  public void AddToDo()
+  {
+	  ToDo obj=new ToDo();
+	  obj.Title=toDoInput;
+	  //obj.IsComplete=isComplete;
+		//Console.WriteLine(toDoInput);
+		addedItems.Add(obj);
+		toDoInput = "";
+	}
+public void RemoveToDo(int i)
+  {
+		//Console.WriteLine(toDoInput);
+		addedItems.Remove(addedItems[i]);
+		toDoInput = "";
+	}
+	public void MarkAsComplete(ToDo todo)
+	{
+		//todo.IsComplete?todo.IsComplete=false:true;
+		if(todo.IsComplete)
+		{
+			todo.IsComplete = false;	
+		}
+		else
+		{
+			todo.IsComplete = true;
+		}
+	}
+}
+
+
+
