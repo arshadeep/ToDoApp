@@ -1,5 +1,8 @@
 ﻿@page "/"
 @using Model
+@using Newtonsoft.Json  @*helps in serializing the object into Json format*@
+@*helps inlocal storage*@
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage 
 <div class="todo-container">
 
 <h1>To Do App</h1>
@@ -26,28 +29,39 @@
 {
 	public string toDoInput { get; set; }
 	public bool isComplete{ get; set; }
-	
+	private const string toDoStorageKey = "SaveToDos";
+
 
 	List<ToDo> addedItems = new List<ToDo>();
+
+	/// <summary>
+	/// for whenever our application starts.
+	/// </summary>
+	/// <returns></returns>
+	protected override async Task OnInitializedAsync()
+	{
+		var parsedToDos =await GetStoredToDos();
+		addedItems = parsedToDos;
+	}
+
 
   public void AddToDo()
   {
 	  ToDo obj=new ToDo();
 	  obj.Title=toDoInput;
-	  //obj.IsComplete=isComplete;
-		//Console.WriteLine(toDoInput);
-		addedItems.Add(obj);
-		toDoInput = "";
-	}
-public void RemoveToDo(int i)
+	  addedItems.Add(obj);
+	  toDoInput = "";
+	  SaveToDo();//now whenever add to do happenas,save will also happen
+  }
+  public void RemoveToDo(int i)
   {
 		//Console.WriteLine(toDoInput);
 		addedItems.Remove(addedItems[i]);
 		toDoInput = "";
-	}
-	public void MarkAsComplete(ToDo todo)
+		SaveToDo();
+  }
+    public void MarkAsComplete(ToDo todo)
 	{
-		//todo.IsComplete?todo.IsComplete=false:true;
 		if(todo.IsComplete)
 		{
 			todo.IsComplete = false;	
@@ -56,7 +70,24 @@ public void RemoveToDo(int i)
 		{
 			todo.IsComplete = true;
 		}
+		SaveToDo();
 	}
+	/// <summary>
+	/// this will store our list of items as string be serializing it.
+	/// </summary>
+	public void SaveToDo()
+	{
+		LocalStorage.SetItemAsync(toDoStorageKey, JsonConvert.SerializeObject(addedItems));
+	}
+
+	private async Task<List<ToDo>> GetStoredToDos()
+	{
+		var storedToDos = await LocalStorage.GetItemAsync<string>(toDoStorageKey);//basically we are using the same key that we used to store the data when adding the items.Type of data it expects is string.
+		var parsedToDos = JsonConvert.DeserializeObject<List<ToDo>>(storedToDos);//take the object and convert into List.
+		return parsedToDos;
+	}
+
+	
 }
 
 
