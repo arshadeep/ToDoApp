@@ -1,26 +1,26 @@
 ﻿@page "/"
 @using Model
 @using Newtonsoft.Json  @*helps in serializing the object into Json format*@
+
 @*helps inlocal storage*@
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage 
 <div class="todo-container">
 
 <h1>To Do App</h1>
-<div class=todo-input>
+<div class="todo-input">
 	<input type="text" @bind="toDoInput"/>
-	<button @onclick="AddToDo">Add</button>
+	<button style="background-color:#24a0ed" @onclick="AddToDo">Add</button>
 </div>
 @for(int i=0;i<addedItems.Count;i++)
 	{
 		var index = i;
 		var toDo = addedItems[i];
-		<div class="todo-item">
-		<div
-		class="@(toDo.IsComplete? "todo-item__text complete":"todo-item__text")"
-		@onclick="@(()=>MarkAsComplete(toDo))">@toDo.Title
-        </div>
-		<div class=todo-item__close @onclick="@(() => RemoveToDo(index))">&times;</div>
-		</div>
+		<ToDoItem
+		Model="@toDo"
+		SaveToDos="@SaveToDo"
+		Index="@index"
+		RemoveToDos="@RemoveToDo"/>
+		
 	}
 	
 </div>

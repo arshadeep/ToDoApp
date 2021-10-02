@@ -1,0 +1,42 @@
+﻿@using Model
+<div class="todo-item">
+		<div
+		class="@(Model.IsComplete? "todo-item__text complete":"todo-item__text")"
+		@onclick="@MarkAsComplete">
+		@Model.Title
+        </div>
+		<div class=todo-item__close @onclick="@Remove">&times;</div>
+</div>
+
+@code {
+	[Parameter]
+	public ToDo Model { get; set; }
+
+	[Parameter]
+	public EventCallback SaveToDos { get; set; }
+
+	[Parameter]
+	public int Index{ get; set; }
+
+	[Parameter]
+	public EventCallback<int> RemoveToDos { get; set; }//the event callback takes an integer
+
+	public void Remove()
+	{
+		RemoveToDos.InvokeAsync(Index);
+	}
+
+	public void MarkAsComplete()
+	{
+		if(Model.IsComplete)
+		{
+			Model.IsComplete = false;	
+		}
+		else
+		{
+			Model.IsComplete = true;
+		}
+		SaveToDos.InvokeAsync(null);
+	}
+
+}

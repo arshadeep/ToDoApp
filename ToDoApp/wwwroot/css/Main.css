@@ -14,10 +14,12 @@
     width: 100%;
     display: grid;
     grid-template-columns: 1fr 50px;
+    background: #0094ff;
+    color:#0094ff
 }
 
     .todo-input input {
-        color: #666;
+        color: #0094ff;
         font-size: 16px;
         font-weight: bold;
         padding: 5px;
@@ -26,9 +28,9 @@
 
     .todo-input button {
         outline: none;
-        color: #fff;
+        color: #0094ff;
         border: none;
-        background: #c72c41;
+        background: #0094ff;
     }
 
 .todo-item {
