@@ -15,11 +15,11 @@
     display: grid;
     grid-template-columns: 1fr 50px;
     background: #0094ff;
-    color:#0094ff
+    color: #202020
 }
 
     .todo-input input {
-        color: #0094ff;
+        color: #808080;
         font-size: 16px;
         font-weight: bold;
         padding: 5px;
